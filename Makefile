@@ -2,7 +2,8 @@ PKG_NAME:=analyzer
 CC = cc
 
 obj = \
-	bin/main.o
+	bin/main.o \
+	bin/input_arguments.o
 
 CFLAGS=-Wall -Werror
 LIBS:=-L./bin/ -lpcap
