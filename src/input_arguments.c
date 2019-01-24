@@ -47,14 +47,20 @@ int input_arguments_parse(const int argc,
 
 		case '?':
 		case 'h':
-			input_arguments_print_using(argv[0]);
-			return -1;
 		default:
-			input_arguments_print_using(argv[0]);
-			return -1;
+			goto error;
 		}
 	}
+
+	if (in_args->port == 0  || in_args->period == 0 ||
+	    in_args->ip[0] == 0 || in_args->iface[0] == 0) {
+		goto error;
+	}
+
 	return 0;
+ error:
+	input_arguments_print_using(argv[0]);
+	return -1;
 }
 
 void input_arguments_print_using(const char *name) {

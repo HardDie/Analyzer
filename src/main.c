@@ -13,11 +13,5 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 
-	if (in_args.port == 0  || in_args.period == 0 ||
-	    in_args.ip[0] == 0 || in_args.iface[0] == 0) {
-		input_arguments_print_using(argv[0]);
-		return 0;
-	}
-
 	return 0;
 }
