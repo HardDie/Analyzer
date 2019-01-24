@@ -54,6 +54,7 @@ int input_arguments_parse(const int argc,
 
 	if (in_args->port == 0  || in_args->period == 0 ||
 	    in_args->ip[0] == 0 || in_args->iface[0] == 0) {
+		printf("Please specify all parametrs\n\n");
 		goto error;
 	}
 
