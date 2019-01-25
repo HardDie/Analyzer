@@ -3,7 +3,9 @@ CC = cc
 
 obj = \
 	bin/main.o \
-	bin/input_arguments.o
+	bin/input_arguments.o \
+	bin/pcap_setup.o \
+	bin/packet_parser.o
 
 CFLAGS=-Wall -Werror
 LIBS:=-L./bin/ -lpcap

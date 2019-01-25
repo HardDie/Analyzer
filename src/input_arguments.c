@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
+#include <arpa/inet.h> // inet_aton()
 
 /**
  * @param [in] argc
@@ -12,7 +13,7 @@
  */
 int input_arguments_parse(const int argc,
                           char **argv,
-                          struct in_args_t *in_args) {
+                          struct variables_t *in_args) {
 	struct option long_options[] = {
 	    {"iface",  required_argument, 0, 'n'},
 	    {"ip",     required_argument, 0, 'i'},
@@ -23,6 +24,7 @@ int input_arguments_parse(const int argc,
 
 	int c;
 	int option_index;
+	struct in_addr ipaddr;
 
 	while (1) {
 		c = getopt_long(argc, argv, "n:i:p:t:",
@@ -36,13 +38,14 @@ int input_arguments_parse(const int argc,
 			strncpy(in_args->iface, optarg, sizeof(in_args->iface));
 			break;
 		case 'i':
-			strncpy(in_args->ip, optarg, sizeof(in_args->ip));
+			inet_aton(optarg, &ipaddr);
+			in_args->ip = ipaddr.s_addr;
 			break;
 		case 'p':
 			in_args->port = atoi(optarg);
 			break;
 		case 't':
-			in_args->period = atoi(optarg);
+			in_args->period = atol(optarg);
 			break;
 
 		case '?':
@@ -53,7 +56,7 @@ int input_arguments_parse(const int argc,
 	}
 
 	if (in_args->port == 0  || in_args->period == 0 ||
-	    in_args->ip[0] == 0 || in_args->iface[0] == 0) {
+	    in_args->ip == 0 || in_args->iface[0] == 0) {
 		printf("Please specify all parametrs\n\n");
 		goto error;
 	}

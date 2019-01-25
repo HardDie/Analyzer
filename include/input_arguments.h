@@ -1,16 +1,22 @@
 #ifndef INPUT_ARGUMENTS
 #define INPUT_ARGUMENTS
 
-struct in_args_t {
+#include <stdint.h>
+
+struct variables_t {
+	// Input arguments
 	char iface[128];
-	char ip[16];
-	int port;
-	int period;
+	uint32_t ip;
+	uint16_t port;
+	uint64_t period; // miliseconds
+	// Statistic
+	uint64_t count;
+	uint64_t recv_bytes;
 };
 
 int input_arguments_parse(const int argc,
                           char **argv,
-                          struct in_args_t *in_args);
+                          struct variables_t *in_args);
 
 void input_arguments_print_using(const char *name);
 
