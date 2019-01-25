@@ -8,8 +8,15 @@ obj = \
 	bin/packet_parser.o
 
 CFLAGS=-Wall -Werror
-LIBS:=-L./bin/ -lpcap
-INCLUDE:=-I./include -I./include/pcap
+LIBS:= -L./libs/libpcap/bin -lpcap
+LIBS+= -L./libs/ubus/bin -lubus
+LIBS+= -L./libs/libubox/bin -lblobmsg_json -lubox
+LIBS+= -L./libs/libjson-c/bin -ljson-c
+
+INCLUDE:= -I./include
+INCLUDE+= -I./libs/libpcap/libpcap
+INCLUDE+= -I./libs/ubus/ubus -I./libs/libubox/
+INCLUDE+= -I./libs/libjson-c
 
 
 all : lib bin/$(PKG_NAME)

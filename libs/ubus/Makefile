@@ -8,7 +8,8 @@ CMAKE_OPTIONS += \
 	-DBUILD_EXAMPLES=OFF \
 	-Dubox_include_dir=../../libubox/ \
 	-Dubox_library=../../libubox/bin/libubox.so \
-	-Dblob_library=../../libubox/bin/libblobmsg_json.so
+	-Dblob_library=../../libubox/bin/libblobmsg_json.so \
+	-Djson=../../libjson-c/bin/libjson-c.so
 
 build: bin
 	make -C bin all -j

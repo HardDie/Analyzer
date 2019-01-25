@@ -5,7 +5,9 @@ CWD = $(shell pwd)/$(PKG_NAME)
 
 CMAKE_OPTIONS += \
 	-DBUILD_LUA=OFF \
-	-DBUILD_EXAMPLES=OFF
+	-DBUILD_EXAMPLES=OFF \
+	-Djson=../../libjson-c/bin/libjson-c.so \
+	-DJSON_PATH=../../libjson-c
 
 build: bin
 	make -C bin all -j
@@ -13,6 +15,7 @@ build: bin
 bin:
 	mkdir bin
 	tar -xzf $(PKG_NAME).tar.gz
+	cd $(PKG_NAME) && patch -p1 -i "../CMake.patch"
 	cd bin && cmake $(CWD) $(CMAKE_OPTIONS)
 
 clean :
