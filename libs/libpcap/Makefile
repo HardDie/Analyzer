@@ -35,7 +35,7 @@ all :
 	@ if [ ! -f $(PKG_SOURCE) ]; then wget $(PKG_SOURCE_URL)$(PKG_SOURCE); fi
 	@ if [ ! -d $(PKG_NAME)-$(PKG_VERSION) ]; then tar -xzf $(PKG_SOURCE); fi
 	cd $(PKG_NAME)-$(PKG_VERSION) && ./configure $(CONFIGURE_ARGS)
-	cd $(PKG_NAME)-$(PKG_VERSION) && make
+	cd $(PKG_NAME)-$(PKG_VERSION) && make -j
 	cp $(PKG_NAME)-$(PKG_VERSION)/libpcap.so* ../../bin/
 	cp -r $(PKG_NAME)-$(PKG_VERSION)/pcap ../../include/
 

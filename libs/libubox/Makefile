@@ -8,7 +8,7 @@ CMAKE_OPTIONS += \
 	-DBUILD_EXAMPLES=OFF
 
 build: bin
-	make -C bin all
+	make -C bin all -j
 
 bin:
 	mkdir bin

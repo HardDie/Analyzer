@@ -11,7 +11,7 @@ CMAKE_OPTIONS += \
 	-Dblob_library=../../libubox/bin/libblobmsg_json.so
 
 build: bin
-	make -C bin all
+	make -C bin all -j
 
 bin:
 	mkdir bin
