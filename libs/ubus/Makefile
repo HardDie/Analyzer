@@ -15,7 +15,7 @@ build: bin
 
 bin:
 	mkdir bin
-	tar -xzf ubus.tar.gz
+	tar -xzf $(PKG_NAME).tar.gz
 	cd bin && cmake $(CWD) $(CMAKE_OPTIONS)
 
 clean :
