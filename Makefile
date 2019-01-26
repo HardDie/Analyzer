@@ -8,30 +8,20 @@ obj = \
 	bin/packet_parser.o \
 	bin/notification_loop.o
 
-CFLAGS=-Wall -Werror
-LIBS+= -lpthread
-LIBS+= -L./libs/libpcap/bin -lpcap
-LIBS+= -L./libs/ubus/bin -lubus
-LIBS+= -L./libs/libubox/bin -lblobmsg_json -lubox
-LIBS+= -L./libs/libjson-c/bin -ljson-c
+LDFLAGS=-L../out
+CFLAGS=-I./include -I../libs/libpcap/libpcap -I../libs/ubus/ubus -I../libs/libubox -I../libs/libjson-c
 
-INCLUDE:= -I./include
-INCLUDE+= -I./libs/libpcap/libpcap
-INCLUDE+= -I./libs/ubus/ubus -I./libs/libubox/
-INCLUDE+= -I./libs/libjson-c
+all: lib bin
 
-
-all : lib bin/$(PKG_NAME)
-
-lib :
+lib:
+	@if [ ! -d out ]; then mkdir out; fi
 	$(MAKE) -C libs
 
-bin/$(PKG_NAME) : $(obj)
-	$(CC) $(CFLAGS) $(INCLUDE) $(obj) -o bin/$(PKG_NAME) $(LIBS)
-
-bin/%.o : src/%.c
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+bin:
+	@if [ ! -d $(PKG_NAME)_build ]; then cp -rf $(PKG_NAME) $(PKG_NAME)_build; fi
+	cd $(PKG_NAME)_build && LDFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" ./configure
+	cd $(PKG_NAME)_build && make
 
 clean :
-	rm -f $(obj) bin/$(PKG_NAME)
+	rm -rf out $(PKG_NAME)_build
 	$(MAKE) -C libs clean
