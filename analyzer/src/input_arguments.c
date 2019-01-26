@@ -35,7 +35,7 @@ int input_arguments_parse(const int argc,
 
 		switch(c) {
 		case 'n':
-			strncpy(in_args->iface, optarg, sizeof(in_args->iface));
+			strncpy(in_args->iface, optarg, sizeof(in_args->iface) - 1);
 			break;
 		case 'i':
 			inet_aton(optarg, &ipaddr);
