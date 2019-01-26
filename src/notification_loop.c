@@ -24,8 +24,11 @@ static void* main_loop(void *arg) {
 		blob_buf_init(&b, 0);
 
 		// Assemble json string
+		pthread_mutex_lock(&vars->mutex);
 		json_object_object_add(obj, "Packet count", json_object_new_int(vars->count));
 		json_object_object_add(obj, "Recieve bytes", json_object_new_int(vars->recv_bytes));
+		pthread_mutex_unlock(&vars->mutex);
+
 		msg = json_object_to_json_string(obj);
 
 		if (!blobmsg_add_json_from_string(&b, msg)) {

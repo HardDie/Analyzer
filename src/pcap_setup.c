@@ -79,8 +79,10 @@ static void packet_handler(uint8_t *args,
 		return;
 	}
 
+	pthread_mutex_lock(&vars->mutex);
 	vars->count++;
 	vars->recv_bytes += header->caplen;
+	pthread_mutex_unlock(&vars->mutex);
 }
 
 void pcap_setup_loop_start(struct variables_t *vars) {

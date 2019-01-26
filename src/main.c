@@ -11,23 +11,32 @@ static void sig_handler(int signo) {
 	notification_loop_stop();
 }
 
-static void init_environment(struct variables_t *vars) {
+static int8_t init_environment(struct variables_t *vars) {
 	memset(vars, 0, sizeof(struct variables_t));
 
 	signal(SIGINT, sig_handler);
 	signal(SIGTERM, sig_handler);
+
+	if (pthread_mutex_init(&vars->mutex, NULL) != 0) {
+		return -1;
+	}
+
+	return 0;
 }
 
 int main(int argc, char **argv) {
 	int32_t ret;
 	struct variables_t vars;
 
-	init_environment(&vars);
+	ret = init_environment(&vars);
+	if (ret < 0) {
+		return -1;
+	}
 
 	// Parse input arguments
 	ret = input_arguments_parse(argc, argv, &vars);
 	if (ret < 0) {
-		return 0;
+		return -1;
 	}
 
 	ret = pcap_setup_connection(vars.iface);
@@ -44,5 +53,6 @@ int main(int argc, char **argv) {
 
 	// Start both loop and wait SIGINT or SIGTERM signals
 
+	pthread_mutex_destroy(&vars.mutex);
 	return 0;
 }

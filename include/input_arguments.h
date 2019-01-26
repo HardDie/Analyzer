@@ -2,6 +2,7 @@
 #define INPUT_ARGUMENTS
 
 #include <stdint.h>
+#include <pthread.h>
 
 struct variables_t {
 	// Input arguments
@@ -12,6 +13,8 @@ struct variables_t {
 	// Statistic
 	uint64_t count;
 	uint64_t recv_bytes;
+	// Mutex
+	pthread_mutex_t mutex;
 };
 
 int input_arguments_parse(const int argc,
