@@ -1,8 +1,8 @@
 all :
-	$(MAKE) -C libpcap
-	$(MAKE) -C libjson-c
-	$(MAKE) -C libubox
-	$(MAKE) -C ubus
+	$(MAKE) -C libpcap build install
+	$(MAKE) -C libjson-c build install
+	$(MAKE) -C libubox build install
+	$(MAKE) -C ubus build install
 
 clean :
 	$(MAKE) -C libpcap clean

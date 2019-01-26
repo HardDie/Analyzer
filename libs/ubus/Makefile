@@ -19,5 +19,8 @@ bin:
 	tar -xzf $(PKG_NAME).tar.gz
 	cd bin && cmake $(CWD) $(CMAKE_OPTIONS)
 
+install:
+	cp bin/*.so ../../out/
+
 clean :
 	rm -rf $(PKG_NAME) bin

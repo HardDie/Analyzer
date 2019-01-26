@@ -18,5 +18,8 @@ bin:
 	cd $(PKG_NAME) && patch -p1 -i "../CMake.patch"
 	cd bin && cmake $(CWD) $(CMAKE_OPTIONS)
 
+install:
+	cp bin/*.so ../../out/
+
 clean :
 	rm -rf $(PKG_NAME) bin

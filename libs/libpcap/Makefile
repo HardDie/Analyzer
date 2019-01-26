@@ -24,5 +24,10 @@ bin:
 	tar -xzf $(PKG_NAME).tar.gz
 	cd $(PKG_NAME) && ./configure $(CONFIGURE_ARGS)
 
+install:
+	cp $(PKG_NAME)/libpcap.so.1.9.0 ../../out/
+	cd ../../out/ && ln -sf libpcap.so.1.9.0 libpcap.so.1
+	cd ../../out/ && ln -sf libpcap.so.1.9.0 libpcap.so
+
 clean:
 	rm -rf $(PKG_NAME) bin

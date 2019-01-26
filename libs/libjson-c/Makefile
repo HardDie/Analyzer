@@ -18,6 +18,9 @@ bin:
 	cd $(PKG_NAME) && NOCONFIGURE=1 ./autogen.sh
 	cd $(PKG_NAME) && CFLAGS=$(HOST_CFLAGS) ./configure $(CONFIGURE_ARGS)
 
+install:
+	cp $(PKG_NAME)/.libs/*.so* ../../out/
+
 clean:
 	rm -rf $(PKG_NAME) bin
 	rm -f json
