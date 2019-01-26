@@ -6,22 +6,19 @@
 #include <json-c/json_object.h>
 
 static pthread_t notification_thread;
-json_object *obj;
 struct ubus_context *ctx;
 
 /**
- * Free json object created for assemble message to ubus,
- * close ubus connection
+ * Close ubus connection
  */
 static void clean_objects(void) {
-	json_object_put(obj);
 	ubus_free(ctx);
 }
 
 /**
  * Main notification loop, started in thread
  *
- * Init blob, assemble json object,
+ * Init blob, put value into blob,
  * put json object to blob and send blob to ubus server
  *
  * @param [in] arg : get struct variables_t for read statistic value
@@ -34,20 +31,13 @@ static void* main_loop(void *arg) {
 		// Init
 		blob_buf_init(&b, 0);
 
-		// Assemble json string
 		pthread_mutex_lock(&vars->mutex);
-		json_object_object_add(obj, "Packet count", json_object_new_int(vars->count));
-		json_object_object_add(obj, "Receive bytes", json_object_new_int(vars->recv_bytes));
+		blobmsg_add_u32(&b, "Packet count", vars->count);
+		blobmsg_add_u32(&b, "Receive bytes", vars->recv_bytes);
 		pthread_mutex_unlock(&vars->mutex);
-
-		if (!blobmsg_add_object(&b, obj)) {
-			fprintf(stderr, "Failed to add json object in blob\n");
-			goto end;
-		}
 
 		ubus_send_event(ctx, "Statistic", b.head);
 
-	end:
 		// Clean
 		blob_buf_free(&b);
 		usleep(vars->period * 1000);
@@ -60,17 +50,12 @@ static void* main_loop(void *arg) {
 }
 
 /**
- * Create json object, open ubus connection and start notification thread
+ * Open ubus connection and start notification thread
  *
  * @param [in] vars
  */
 int8_t notification_loop_start(struct variables_t *vars) {
 	const char *ubus_socket = NULL;
-
-	if (!(obj = json_object_new_object())) {
-		fprintf(stderr, "Failed to create json object\n");
-		return -1;
-	}
 
 	ctx = ubus_connect(ubus_socket);
 	if (!ctx) {
