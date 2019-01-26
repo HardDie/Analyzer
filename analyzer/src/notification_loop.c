@@ -21,15 +21,14 @@ static void clean_objects(void) {
 /**
  * Main notification loop, started in thread
  *
- * Init blob, assemble json object and convert to string,
- * put json string to blob and send blob to ubus server
+ * Init blob, assemble json object,
+ * put json object to blob and send blob to ubus server
  *
  * @param [in] arg : get struct variables_t for read statistic value
  */
 static void* main_loop(void *arg) {
 	struct variables_t *vars = (struct variables_t*)arg;
 	static struct blob_buf b;
-	const char *msg;
 
 	while(1) {
 		// Init
@@ -41,10 +40,8 @@ static void* main_loop(void *arg) {
 		json_object_object_add(obj, "Receive bytes", json_object_new_int(vars->recv_bytes));
 		pthread_mutex_unlock(&vars->mutex);
 
-		msg = json_object_to_json_string(obj);
-
-		if (!blobmsg_add_json_from_string(&b, msg)) {
-			fprintf(stderr, "Failed to parse message data\n");
+		if (!blobmsg_add_object(&b, obj)) {
+			fprintf(stderr, "Failed to add json object in blob\n");
 			goto end;
 		}
 
