@@ -49,6 +49,16 @@ int8_t pcap_setup_connection(const char *iface) {
 	return 0;
 }
 
+/**
+ * Pcap thread call this function each time when get incoming packet
+ *
+ * Process all incoming packets if we get UDP with args->ip && args->port
+ * increase statistic vars->count and vars->recv_bytes
+ *
+ * @param [out] args : write statistic
+ * @param [in] header
+ * @param [in] packet
+ */
 static void packet_handler(uint8_t *args,
                            const struct pcap_pkthdr* header,
                            const uint8_t* packet) {
@@ -89,6 +99,9 @@ void pcap_setup_loop_start(struct variables_t *vars) {
 	pcap_loop(handle, 0, packet_handler, (uint8_t*)vars);
 }
 
+/**
+ * Stop pcap thread and free handle
+ */
 void pcap_setup_loop_stop(void) {
 	pcap_breakloop(handle);
 	pcap_close(handle);

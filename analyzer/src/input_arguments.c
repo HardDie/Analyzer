@@ -38,6 +38,7 @@ int input_arguments_parse(const int argc,
 			strncpy(in_args->iface, optarg, sizeof(in_args->iface) - 1);
 			break;
 		case 'i':
+			// Convert string to 4 byte value
 			inet_aton(optarg, &ipaddr);
 			in_args->ip = ipaddr.s_addr;
 			break;

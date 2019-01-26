@@ -9,11 +9,23 @@ static pthread_t notification_thread;
 json_object *obj;
 struct ubus_context *ctx;
 
+/**
+ * Free json object created for assemble message to ubus,
+ * close ubus connection
+ */
 static void clean_objects(void) {
 	json_object_put(obj);
 	ubus_free(ctx);
 }
 
+/**
+ * Main notification loop, started in thread
+ *
+ * Init blob, assemble json object and convert to string,
+ * put json string to blob and send blob to ubus server
+ *
+ * @param [in] arg : get struct variables_t for read statistic value
+ */
 static void* main_loop(void *arg) {
 	struct variables_t *vars = (struct variables_t*)arg;
 	static struct blob_buf b;
@@ -50,6 +62,11 @@ static void* main_loop(void *arg) {
 	return NULL;
 }
 
+/**
+ * Create json object, open ubus connection and start notification thread
+ *
+ * @param [in] vars
+ */
 int8_t notification_loop_start(struct variables_t *vars) {
 	const char *ubus_socket = NULL;
 
