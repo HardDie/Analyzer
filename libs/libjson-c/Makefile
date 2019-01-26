@@ -8,7 +8,7 @@ CONFIGURE_ARGS += \
     --enable-threading
 
 build: bin
-	cd $(PKG_NAME) && make -j
+	cd $(PKG_NAME) && make V=0 -j
 	cp $(PKG_NAME)/.libs/*.so* bin/
 	ln -sf $(PKG_NAME) json
 
