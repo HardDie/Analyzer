@@ -22,6 +22,5 @@ install:
 	cp $(PKG_NAME)/.libs/*.so* ../../out/
 
 clean:
-	rm -rf $(PKG_NAME) bin
-	rm -f json
+	rm -rf $(PKG_NAME) bin json
 
