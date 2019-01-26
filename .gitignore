@@ -1,4 +1,7 @@
 bin/
+analyzer_build/
+out/
+
 
 libs/libpcap/libpcap/
 libs/libubox/libubox/
