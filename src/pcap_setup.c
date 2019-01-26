@@ -1,10 +1,12 @@
 #include <pcap_setup.h>
 
 #include <pcap/pcap.h>
+#include <packet_parser.h>
 
-pcap_t* setup_pcap_connection(const char *iface) {
+static pcap_t *handle = NULL;
+
+int8_t pcap_setup_connection(const char *iface) {
 	int32_t ret;
-	pcap_t *handle = NULL;
 	char error_buffer[PCAP_ERRBUF_SIZE];
 	// Set 0 then call handler right after timeout is over
 	int snapshot_len = 0;
@@ -15,13 +17,14 @@ pcap_t* setup_pcap_connection(const char *iface) {
 	handle = pcap_open_live(iface, snapshot_len, promiscuous, timeout, error_buffer);
 	if (!handle) {
 		fprintf(stderr, "Could not open device %s: %s\n", iface, error_buffer);
-		return NULL;
+		return -1;
 	}
 
 	// Recieve only incoming packets
 	ret = pcap_setdirection(handle, PCAP_D_IN);
 	if (ret < 0) {
 		fprintf(stderr, "Could not setup direction: %s\n", pcap_geterr(handle));
+		return -1;
 	}
 
 	/*
@@ -43,5 +46,48 @@ pcap_t* setup_pcap_connection(const char *iface) {
 	 * But we will use manual filtering.
 	 */
 
-	return handle;
+	return 0;
+}
+
+static void packet_handler(uint8_t *args,
+                           const struct pcap_pkthdr* header,
+                           const uint8_t* packet) {
+	int8_t ret;
+	struct variables_t *vars = (struct variables_t*)args;
+
+	ret = packet_parser_is_type_ip(packet);
+	if (!ret) {
+		// If not IP packet
+		return;
+	}
+
+	ret = packet_parser_is_proto_udp(packet);
+	if (!ret) {
+		// If not UDP packet
+		return;
+	}
+
+	ret = packet_parser_is_src_ip_eq(packet, vars->ip);
+	if (!ret) {
+		// Wrong Src IP
+		return;
+	}
+
+	ret = packet_parser_is_src_port_eq(packet, vars->port);
+	if (!ret) {
+		// Wrong Src Port
+		return;
+	}
+
+	vars->count++;
+	vars->recv_bytes += header->caplen;
+}
+
+void pcap_setup_loop_start(struct variables_t *vars) {
+	pcap_loop(handle, 0, packet_handler, (uint8_t*)vars);
+}
+
+void pcap_setup_loop_stop(void) {
+	pcap_breakloop(handle);
+	pcap_close(handle);
 }

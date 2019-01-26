@@ -5,10 +5,12 @@ obj = \
 	bin/main.o \
 	bin/input_arguments.o \
 	bin/pcap_setup.o \
-	bin/packet_parser.o
+	bin/packet_parser.o \
+	bin/notification_loop.o
 
 CFLAGS=-Wall -Werror
-LIBS:= -L./libs/libpcap/bin -lpcap
+LIBS+= -lpthread
+LIBS+= -L./libs/libpcap/bin -lpcap
 LIBS+= -L./libs/ubus/bin -lubus
 LIBS+= -L./libs/libubox/bin -lblobmsg_json -lubox
 LIBS+= -L./libs/libjson-c/bin -ljson-c

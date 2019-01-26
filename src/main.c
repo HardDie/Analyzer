@@ -1,18 +1,28 @@
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 
 #include <input_arguments.h>
 #include <pcap_setup.h>
-#include <packet_parser.h>
+#include <notification_loop.h>
 
-void packet_handler(uint8_t *args,
-                    const struct pcap_pkthdr* header,
-                    const uint8_t* packet);
+static void sig_handler(int signo) {
+	pcap_setup_loop_stop();
+	notification_loop_stop();
+}
+
+static void init_environment(struct variables_t *vars) {
+	memset(vars, 0, sizeof(struct variables_t));
+
+	signal(SIGINT, sig_handler);
+	signal(SIGTERM, sig_handler);
+}
 
 int main(int argc, char **argv) {
 	int32_t ret;
 	struct variables_t vars;
-	memset(&vars, 0, sizeof(vars));
+
+	init_environment(&vars);
 
 	// Parse input arguments
 	ret = input_arguments_parse(argc, argv, &vars);
@@ -20,49 +30,19 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 
-	// Setup capture loop
-	pcap_t *handle = setup_pcap_connection(vars.iface);
-	if (!handle) {
+	ret = pcap_setup_connection(vars.iface);
+	if (ret < 0) {
 		return -1;
 	}
 
-	// Start capture loop
-	pcap_loop(handle, 0, packet_handler, (uint8_t*)&vars);
+	ret = notification_loop_start(&vars);
+	if (ret < 0) {
+		return -1;
+	}
 
-	pcap_close(handle);
+	pcap_setup_loop_start(&vars);
+
+	// Start both loop and wait SIGINT or SIGTERM signals
+
 	return 0;
-}
-
-void packet_handler(uint8_t *args,
-                    const struct pcap_pkthdr* header,
-                    const uint8_t* packet) {
-	int8_t ret;
-	struct variables_t *vars = (struct variables_t*)args;
-
-	ret = packet_parser_is_type_ip(packet);
-	if (!ret) {
-		// If not IP packet
-		return;
-	}
-
-	ret = packet_parser_is_proto_udp(packet);
-	if (!ret) {
-		// If not UDP packet
-		return;
-	}
-
-	ret = packet_parser_is_src_ip_eq(packet, vars->ip);
-	if (!ret) {
-		// Wrong Src IP
-		return;
-	}
-
-	ret = packet_parser_is_src_port_eq(packet, vars->port);
-	if (!ret) {
-		// Wrong Src Port
-		return;
-	}
-
-	vars->count++;
-	vars->recv_bytes += header->caplen;
 }
