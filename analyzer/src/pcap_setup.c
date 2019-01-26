@@ -11,8 +11,8 @@ int8_t pcap_setup_connection(const char *iface) {
 	// Set 0 then call handler right after timeout is over
 	int snapshot_len = 0;
 	int promiscuous = 0;
-	// Process packets every second
-	int timeout = 1000;
+	// Process packets right after recieve
+	int timeout = 0;
 
 	handle = pcap_open_live(iface, snapshot_len, promiscuous, timeout, error_buffer);
 	if (!handle) {
