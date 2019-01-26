@@ -8,9 +8,11 @@ AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CC
-AM_INIT_AUTOMAKE([subdir-objects])
-CFLAGS="$CFLAGS -I./include"
-LDFLAGS="$LDFLAGS -lpthread"
+AM_INIT_AUTOMAKE([subdir-objects silent-rules])
+AM_SILENT_RULES([yes])
+CFLAGS="$CFLAGS -I./include -I../libs/libpcap/libpcap -I../libs/ubus/ubus -I../libs/libubox -I../libs/libjson-c"
+LDFLAGS="$LDFLAGS -L../libs/libpcap/bin -L../libs/ubus/bin -L../libs/libubox/bin -L../libs/libjson-c/bin"
+LIBS="$LIBS -lpthread -lpcap -lubus -lblobmsg_json -lubox -ljson-c"
 
 # Checks for libraries.
 
