@@ -10,10 +10,10 @@ Application for capture incoming UDP packets from specified interface
 ## Build:
 make
 
-## Start server:
+## Start ubus server:
 ./libs/ubus/bin/ubusd
 
-## Start listener:
+## Start ubus listener:
 ./libs/ubus/bin/ubus listen
 
 ## Start application:
