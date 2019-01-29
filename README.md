@@ -17,9 +17,9 @@ make
 ./libs/ubus/bin/ubus listen
 
 ## Start application:
-* LD_LIBRARY_PATH="./out" ./analyzer_build/analyzer
+* LD_LIBRARY_PATH="./out" ./analyzer/analyzer
 * or
-* LD_LIBRARY_PATH="./libs/libpcap/bin:./libs/ubus/bin:./libs/libubox/bin:./libs/libjson-c/bin" ./analyzer_build/analyzer
+* LD_LIBRARY_PATH="./libs/libpcap/bin:./libs/ubus/bin:./libs/libubox/bin:./libs/libjson-c/bin" ./analyzer/analyzer
 
 ## Setup Debian 7:
 apt-get install make gcc cmake flex bison autogen autoconf libtool
