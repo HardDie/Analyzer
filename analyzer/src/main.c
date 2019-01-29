@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
+#include <unistd.h> // daemon()
 
 #include <input_arguments.h>
 #include <pcap_setup.h>
@@ -39,16 +40,26 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
+	// Setup pcap
 	ret = pcap_setup_connection(vars.iface);
 	if (ret < 0) {
 		return -1;
 	}
 
-	ret = notification_loop_start(&vars);
+	// Setup notification loop
+	ret = notification_loop_setup();
 	if (ret < 0) {
 		return -1;
 	}
 
+	/* Become the daemon
+	 *
+	 * Detach from parent process,
+	 * close all open file descriptors,
+	 * change working directory */
+	daemon(0, 0);
+
+	notification_loop_start(&vars);
 	pcap_setup_loop_start(&vars);
 
 	// Start both loop and wait SIGINT or SIGTERM signals

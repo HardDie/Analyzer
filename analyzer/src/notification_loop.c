@@ -50,11 +50,9 @@ static void* main_loop(void *arg) {
 }
 
 /**
- * Open ubus connection and start notification thread
- *
- * @param [in] vars
+ * Open ubus connection
  */
-int8_t notification_loop_start(struct variables_t *vars) {
+int8_t notification_loop_setup(void) {
 	const char *ubus_socket = NULL;
 
 	ctx = ubus_connect(ubus_socket);
@@ -62,10 +60,17 @@ int8_t notification_loop_start(struct variables_t *vars) {
 		fprintf(stderr, "Failed to connect to ubus\n");
 		return -1;
 	}
-
-	pthread_create(&notification_thread, NULL, main_loop, vars);
-
 	return 0;
+}
+
+
+/**
+ * Start main notification loop in thread
+ *
+ * @param [in] vars
+ */
+void notification_loop_start(struct variables_t *vars) {
+	pthread_create(&notification_thread, NULL, main_loop, vars);
 }
 
 void notification_loop_stop(void) {
