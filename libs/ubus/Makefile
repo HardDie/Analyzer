@@ -1,9 +1,12 @@
+include ../../config.mk
+
 PKG_NAME:=ubus
 PKG_RELEASE:=1
 
 CWD = $(shell pwd)/$(PKG_NAME)
 
 CMAKE_OPTIONS += \
+	-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_TOOLCHAIN_FILE) \
 	-DBUILD_LUA=OFF \
 	-DBUILD_EXAMPLES=OFF \
 	-Dubox_include_dir=../../libubox/ \

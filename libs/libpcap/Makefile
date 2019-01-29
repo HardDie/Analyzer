@@ -1,3 +1,5 @@
+include ../../config.mk
+
 PKG_NAME:=libpcap
 PKG_VERSION:=1.9.0
 PKG_RELEASE:=1
@@ -22,7 +24,7 @@ build: bin
 bin:
 	mkdir bin
 	tar -xzf $(PKG_NAME).tar.gz
-	cd $(PKG_NAME) && ./configure $(CONFIGURE_ARGS)
+	cd $(PKG_NAME) && ./configure $(CONFIGURE_ARGS) --host=$(HOST)
 
 install:
 	cp $(PKG_NAME)/libpcap.so.1.9.0 ../../out/

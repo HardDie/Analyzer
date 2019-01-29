@@ -1,3 +1,5 @@
+include config.mk
+
 PKG_NAME:=analyzer
 CC = cc
 
@@ -19,7 +21,7 @@ lib:
 
 bin:
 	@if [ ! -d $(PKG_NAME)_build ]; then cp -rf $(PKG_NAME) $(PKG_NAME)_build; fi
-	cd $(PKG_NAME)_build && LDFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" ./configure
+	cd $(PKG_NAME)_build && LDFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" ./configure --host=$(HOST)
 	cd $(PKG_NAME)_build && make
 
 clean :
