@@ -20,10 +20,9 @@ lib:
 	$(MAKE) -C libs
 
 bin:
-	@if [ ! -d $(PKG_NAME)_build ]; then cp -rf $(PKG_NAME) $(PKG_NAME)_build; fi
-	cd $(PKG_NAME)_build && LDFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" ./configure --host=$(HOST)
-	cd $(PKG_NAME)_build && make
+	cd $(PKG_NAME) && LDFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" ./configure --host=$(HOST)
+	cd $(PKG_NAME) && make
 
 clean :
-	rm -rf out $(PKG_NAME)_build
+	$(MAKE) -C $(PKG_NAME) clean
 	$(MAKE) -C libs clean
