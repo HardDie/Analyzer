@@ -23,3 +23,6 @@ make
 
 ## Setup Debian 7:
 apt-get install make gcc cmake flex bison autogen autoconf libtool
+
+## Cross-compiling
+Setup config.mk and cross-linux-gcc.cmake
